@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useEarlyAccess } from '@/context/EarlyAccessContext';
 
 // Staggered entrance: each element starts hidden, revealed in sequence
 const stagger = (delayMs: number): React.CSSProperties => ({
@@ -11,8 +11,8 @@ const stagger = (delayMs: number): React.CSSProperties => ({
 
 export function HeroSection() {
   const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const { openDrawer } = useEarlyAccess();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +21,7 @@ export function HeroSection() {
       return;
     }
     setError('');
-    setSubmitted(true);
+    openDrawer(email);
   };
 
   return (
@@ -73,29 +73,22 @@ export function HeroSection() {
 
         {/* Email CTA */}
         <div style={stagger(520)}>
-          {submitted ? (
-            <div className="flex items-center justify-center gap-3 text-white py-3">
-              <CheckCircle className="w-5 h-5 text-coral" />
-              <span className="text-base font-medium">You're on the list. We'll be in touch.</span>
-            </div>
-          ) : (
-            <form
-              onSubmit={handleSubmit}
-              className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
-            >
-              <input
-                id="hero-email"
-                type="email"
-                value={email}
-                onChange={(e) => { setEmail(e.target.value); setError(''); }}
-                placeholder="Enter your email"
-                className="flex-1 h-12 px-4 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/35 text-sm focus:outline-none focus:border-coral/60 focus:bg-white/[0.13] transition-[border-color,background-color] duration-200"
-              />
-              <Button type="submit" variant="coral" size="lg" className="whitespace-nowrap">
-                Claim Your Spot →
-              </Button>
-            </form>
-          )}
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+          >
+            <input
+              id="hero-email"
+              type="email"
+              value={email}
+              onChange={(e) => { setEmail(e.target.value); setError(''); }}
+              placeholder="Enter your email"
+              className="flex-1 h-12 px-4 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/35 text-sm focus:outline-none focus:border-coral/60 focus:bg-white/[0.13] transition-[border-color,background-color] duration-200"
+            />
+            <Button type="submit" variant="coral" size="lg" className="whitespace-nowrap">
+              Claim Your Spot →
+            </Button>
+          </form>
           {error && <p className="mt-2 text-coral text-sm">{error}</p>}
         </div>
 

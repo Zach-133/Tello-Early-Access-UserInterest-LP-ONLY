@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useEarlyAccess } from '@/context/EarlyAccessContext';
 import telloLogo from '/tello_logo_white.png';
 
 const NAV_LINKS = [
@@ -11,6 +12,7 @@ const NAV_LINKS = [
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { openDrawer } = useEarlyAccess();
 
   // Close mobile menu on resize to desktop
   useEffect(() => {
@@ -29,13 +31,7 @@ export function Navbar() {
 
   const handleCTA = () => {
     setMobileOpen(false);
-    setTimeout(() => {
-      const el = document.getElementById('hero-email');
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        setTimeout(() => el.focus(), 600);
-      }
-    }, mobileOpen ? 200 : 0);
+    setTimeout(() => openDrawer(), mobileOpen ? 200 : 0);
   };
 
   return (

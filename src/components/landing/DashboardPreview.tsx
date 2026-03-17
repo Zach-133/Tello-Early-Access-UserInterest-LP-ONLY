@@ -230,7 +230,7 @@ export function DashboardPreview({ animate }: { animate?: boolean }) {
       </div>
 
       {/* ── Dashboard body ── */}
-      <div className="p-5">
+      <div className="p-3 sm:p-5">
 
         {/* Header */}
         <div className="mb-4">
@@ -243,7 +243,7 @@ export function DashboardPreview({ animate }: { animate?: boolean }) {
         </div>
 
         {/* ── Stat cards ── */}
-        <div className="grid grid-cols-4 gap-2.5 mb-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-4">
           <StatCard icon={<AnimatedFlame />}                                                                   iconBg={CORAL_BG} value="2"       label="Day Streak"    sub="Keep it up!" />
           <StatCard icon={<CircleDot  size={15} style={{ color: TEAL }} />}                                   iconBg={TEAL_BG}  value="5"       label="Sessions Done" />
           <StatCard icon={<TrendingUp size={15} style={{ color: GOLD }} />}                                   iconBg={GOLD_BG}  value="+30 pts" label="Improvement"   />
@@ -251,7 +251,7 @@ export function DashboardPreview({ animate }: { animate?: boolean }) {
         </div>
 
         {/* ── Bottom two columns ── */}
-        <div className="grid gap-3" style={{ gridTemplateColumns: '1.15fr 0.85fr' }}>
+        <div className="grid gap-3 grid-cols-1 sm:grid-cols-[1.15fr_0.85fr]">
 
           {/* Performance chart */}
           <div className="rounded-xl p-3 flex flex-col" style={{ background: 'white', border: '1px solid hsl(30 15% 90%)', minHeight: 220 }}>

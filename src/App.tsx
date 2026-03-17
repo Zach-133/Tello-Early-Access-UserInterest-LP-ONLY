@@ -1,4 +1,6 @@
 import './index.css';
+import { EarlyAccessProvider } from '@/context/EarlyAccessContext';
+import { EarlyAccessDrawer } from '@/components/landing/EarlyAccessDrawer';
 import { Navbar } from '@/components/landing/Navbar';
 import { HeroSection } from '@/components/landing/HeroSection';
 import { HowItWorksSection } from '@/components/landing/HowItWorksSection';
@@ -9,17 +11,20 @@ import { Footer } from '@/components/landing/Footer';
 
 function App() {
   return (
-    <div className="min-h-screen bg-primary">
-      <Navbar />
-      <main>
-        <HeroSection />
-        <HowItWorksSection />
-        <BenefitsSection />
-        <FAQSection />
-        <CTASection />
-      </main>
-      <Footer />
-    </div>
+    <EarlyAccessProvider>
+      <div className="min-h-screen bg-primary">
+        <Navbar />
+        <main>
+          <HeroSection />
+          <HowItWorksSection />
+          <BenefitsSection />
+          <FAQSection />
+          <CTASection />
+        </main>
+        <Footer />
+      </div>
+      <EarlyAccessDrawer />
+    </EarlyAccessProvider>
   );
 }
 

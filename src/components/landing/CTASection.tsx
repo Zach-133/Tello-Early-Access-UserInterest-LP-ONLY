@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { CheckCircle, Check } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
+import { useEarlyAccess } from '@/context/EarlyAccessContext';
 
 const benefits = [
   'Priority early access',
@@ -11,9 +12,9 @@ const benefits = [
 
 export function CTASection() {
   const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
   const { ref, isVisible } = useScrollReveal({ threshold: 0.15 });
+  const { openDrawer } = useEarlyAccess();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,7 +23,7 @@ export function CTASection() {
       return;
     }
     setError('');
-    setSubmitted(true);
+    openDrawer(email);
   };
 
   return (
@@ -95,25 +96,18 @@ export function CTASection() {
             transform: isVisible ? 'translateY(0)' : 'translateY(16px)',
           }}
         >
-          {submitted ? (
-            <div className="flex items-center justify-center gap-3 text-white py-3 mb-10">
-              <CheckCircle className="w-5 h-5 text-coral" />
-              <span className="text-base font-medium">You're on the list. We'll be in touch.</span>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto mb-10">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => { setEmail(e.target.value); setError(''); }}
-                placeholder="Enter your email"
-                className="flex-1 h-12 px-4 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 text-sm focus:outline-none focus:border-coral/60 focus:bg-white/[0.13] transition-[border-color,background-color] duration-200"
-              />
-              <Button type="submit" variant="coral" size="lg" className="whitespace-nowrap font-semibold">
-                Get Early Access
-              </Button>
-            </form>
-          )}
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto mb-10">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => { setEmail(e.target.value); setError(''); }}
+              placeholder="Enter your email"
+              className="flex-1 h-12 px-4 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 text-sm focus:outline-none focus:border-coral/60 focus:bg-white/[0.13] transition-[border-color,background-color] duration-200"
+            />
+            <Button type="submit" variant="coral" size="lg" className="whitespace-nowrap font-semibold">
+              Get Early Access
+            </Button>
+          </form>
           {error && <p className="mb-4 text-coral text-sm">{error}</p>}
         </div>
 
