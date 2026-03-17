@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export function Footer() {
   return (
     <footer className="bg-primary py-10 px-6">
@@ -30,19 +32,19 @@ export function Footer() {
           </p>
         </div>
         <div className="border-t border-white/15 pt-5 flex items-center justify-center gap-6">
-          <a
-            href="#"
+          <Link
+            to="/privacy-policy"
             className="text-primary-foreground/55 text-xs hover:text-primary-foreground transition-[color] duration-200"
           >
             Privacy Policy
-          </a>
+          </Link>
           <span className="w-px h-3 bg-white/20" />
-          <a
-            href="#"
+          <Link
+            to="/terms-of-service"
             className="text-primary-foreground/55 text-xs hover:text-primary-foreground transition-[color] duration-200"
           >
             Terms of Service
-          </a>
+          </Link>
         </div>
       </div>
     </footer>
