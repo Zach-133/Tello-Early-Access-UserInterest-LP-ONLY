@@ -81,7 +81,7 @@ export function CTASection() {
             transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
           } as React.CSSProperties}
         >
-          Ready to ace your<br className="hidden sm:block" />
+          Ready to ace your{' '}<br className="hidden sm:block" />
           <span className="text-coral">next interview?</span>
         </h2>
 

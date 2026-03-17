@@ -128,7 +128,7 @@ export function BenefitsSection() {
             <span className="text-primary-foreground/35 text-xs">{spotCount} of 100 spots taken</span>
           </div>
 
-          {/* Form — desktop */}
+          {/* Form — desktop only */}
           <form onSubmit={handleSubmit} className="hidden sm:flex flex-row gap-3 w-full sm:max-w-sm">
             <input
               type="email"
@@ -142,16 +142,6 @@ export function BenefitsSection() {
             </Button>
           </form>
           {error && <p className="mt-2 text-coral text-sm hidden sm:block">{error}</p>}
-
-          {/* Button — mobile */}
-          <Button
-            onClick={() => openDrawer('')}
-            variant="coral"
-            size="lg"
-            className="sm:hidden w-full"
-          >
-            Claim Your Spot
-          </Button>
         </div>
 
         {/* Right: Recreated dashboard */}
@@ -162,13 +152,11 @@ export function BenefitsSection() {
               className="absolute -inset-6 rounded-3xl pointer-events-none"
               style={{ background: 'radial-gradient(ellipse at center, hsl(18 75% 65% / 0.12) 0%, transparent 70%)' }}
             />
-            {/* Mobile: clip to top portion with fade */}
-            <div className="relative lg:hidden" style={{ height: 310, overflow: 'hidden' }}>
-              <DashboardPreview animate={isVisible} />
-              <div
-                className="absolute inset-x-0 bottom-0 pointer-events-none"
-                style={{ height: 80, background: 'linear-gradient(transparent, hsl(25 45% 22%))' }}
-              />
+            {/* Mobile: scale down to show full dashboard */}
+            <div className="lg:hidden overflow-hidden" style={{ height: 440 }}>
+              <div style={{ transform: 'scale(0.65)', transformOrigin: 'top left', width: '154%' }}>
+                <DashboardPreview animate={isVisible} />
+              </div>
             </div>
             {/* Desktop: full dashboard */}
             <div className="hidden lg:block">

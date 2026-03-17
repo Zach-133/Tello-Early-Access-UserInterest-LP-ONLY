@@ -6,7 +6,7 @@ import telloLogo from '/tello_logo_white.png';
 
 const NAV_LINKS = [
   { label: 'Features', id: 'features', block: 'start' as ScrollLogicalPosition },
-  { label: 'Early Access', id: 'early-access', block: 'center' as ScrollLogicalPosition },
+  { label: 'Early Access', id: 'early-access', block: 'start' as ScrollLogicalPosition },
   { label: 'FAQ', id: 'faq', block: 'start' as ScrollLogicalPosition },
 ];
 
