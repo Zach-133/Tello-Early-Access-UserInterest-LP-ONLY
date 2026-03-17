@@ -103,6 +103,7 @@ type ChartMode = 'overall' | 'breakdown';
 export function DashboardPreview({ animate }: { animate?: boolean }) {
   const [chartMode, setChartMode] = useState<ChartMode>('overall');
   const [animationDone, setAnimationDone] = useState(false);
+  const [tapIndicator, setTapIndicator] = useState<ChartMode | null>(null);
   const outerRef        = useRef<HTMLDivElement>(null);
   const breakdownBtnRef = useRef<HTMLButtonElement>(null);
 
@@ -150,17 +151,23 @@ export function DashboardPreview({ animate }: { animate?: boolean }) {
     };
   }, []);
 
-  // ── Auto mode-switch loop (synchronized with 7s cursor animation) ──────────
+  // ── Auto mode-switch loop + tap indicators ────────────────────────────────
   useEffect(() => {
     if (!animate) return;
     const CYCLE_MS  = 7000;
-    const CLICK_AT  = Math.round(CYCLE_MS * 0.59); // ~4130ms — just after cursor "clicks"
-    const RESET_AT  = Math.round(CYCLE_MS * 0.90); // ~6300ms — switch back to Overall
+    const CLICK_AT  = Math.round(CYCLE_MS * 0.59); // ~4130ms
+    const RESET_AT  = Math.round(CYCLE_MS * 0.90); // ~6300ms
+    const TAP_BEFORE = 450;
+    const TAP_CLEAR  = 800;
 
     const runCycle = () => {
-      const t1 = setTimeout(() => { setChartMode('breakdown'); setAnimationDone(false); }, CLICK_AT);
-      const t2 = setTimeout(() => { setChartMode('overall');   setAnimationDone(false); }, RESET_AT);
-      return [t1, t2] as ReturnType<typeof setTimeout>[];
+      const t0  = setTimeout(() => setTapIndicator('breakdown'), CLICK_AT - TAP_BEFORE);
+      const t0c = setTimeout(() => setTapIndicator(null),        CLICK_AT - TAP_BEFORE + TAP_CLEAR);
+      const t1  = setTimeout(() => { setChartMode('breakdown'); setAnimationDone(false); }, CLICK_AT);
+      const t2a = setTimeout(() => setTapIndicator('overall'),   RESET_AT - TAP_BEFORE);
+      const t2c = setTimeout(() => setTapIndicator(null),        RESET_AT - TAP_BEFORE + TAP_CLEAR);
+      const t2  = setTimeout(() => { setChartMode('overall');   setAnimationDone(false); }, RESET_AT);
+      return [t0, t0c, t1, t2a, t2c, t2] as ReturnType<typeof setTimeout>[];
     };
 
     let timers = runCycle();
@@ -172,10 +179,11 @@ export function DashboardPreview({ animate }: { animate?: boolean }) {
     return () => {
       clearInterval(interval);
       timers.forEach(clearTimeout);
+      setTapIndicator(null);
     };
   }, [animate]);
 
-  const switchMode = (mode: ChartMode) => { setChartMode(mode); setAnimationDone(false); };
+  const switchMode = (mode: ChartMode) => { setChartMode(mode); setAnimationDone(false); setTapIndicator(null); };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const chartData: any[] = chartMode === 'overall' ? overallData : breakdownData;
 
@@ -201,10 +209,17 @@ export function DashboardPreview({ animate }: { animate?: boolean }) {
           70%     { transform: scaleX(1.05) scaleY(0.96); filter: drop-shadow(0 0 3px rgba(220,80,20,0.7)); }
           85%     { transform: scaleX(0.92) scaleY(1.04); filter: drop-shadow(0 0 4px rgba(255,120,20,0.85)); }
         }
+        @keyframes eaTapFade {
+          0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+          20%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+          65%  { opacity: 0.85; transform: translate(-50%, -50%) scale(1); }
+          100% { opacity: 0; transform: translate(-50%, -50%) scale(1.15); }
+        }
       `}</style>
 
-      {/* ── Animated cursor overlay ── */}
+      {/* ── Animated cursor overlay — desktop only ── */}
       <div
+        className="hidden sm:block"
         style={{
           position: 'absolute',
           left: 20,
@@ -273,6 +288,7 @@ export function DashboardPreview({ animate }: { animate?: boolean }) {
                     ref={mode === 'breakdown' ? breakdownBtnRef : undefined}
                     onClick={() => switchMode(mode)}
                     style={{
+                      position: 'relative', overflow: 'hidden',
                       padding: '3px 9px', borderRadius: 7, fontSize: 10, fontWeight: 500,
                       border: 'none', cursor: 'pointer',
                       transition: 'background 150ms, color 150ms, box-shadow 150ms',
@@ -282,6 +298,20 @@ export function DashboardPreview({ animate }: { animate?: boolean }) {
                     }}
                   >
                     {mode.charAt(0).toUpperCase() + mode.slice(1)}
+                    {tapIndicator === mode && (
+                      <span
+                        key={`tap-${mode}-${Date.now()}`}
+                        style={{
+                          position: 'absolute',
+                          top: '50%', left: '50%',
+                          width: '200%', aspectRatio: '1',
+                          borderRadius: '50%',
+                          background: 'rgba(0, 0, 0, 0.18)',
+                          pointerEvents: 'none',
+                          animation: 'eaTapFade 0.75s ease-out forwards',
+                        }}
+                      />
+                    )}
                   </button>
                 ))}
               </div>

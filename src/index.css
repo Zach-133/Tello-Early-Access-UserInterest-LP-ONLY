@@ -252,4 +252,8 @@
     scroll-snap-align: start;
     scroll-margin-top: 64px;
   }
+  /* Early access is tall — allow free scroll within it */
+  #early-access {
+    scroll-snap-align: none;
+  }
 }
