@@ -6,7 +6,8 @@ export function EarlyAccessDrawer() {
   const { isOpen, initialEmail, closeDrawer } = useEarlyAccess();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [errors, setErrors] = useState<{ name?: string; email?: string }>({});
+  const [consent, setConsent] = useState(false);
+  const [errors, setErrors] = useState<{ name?: string; email?: string; consent?: string }>({});
   const [submitted, setSubmitted] = useState(false);
   const nameRef = useRef<HTMLInputElement>(null);
 
@@ -15,6 +16,7 @@ export function EarlyAccessDrawer() {
     if (isOpen) {
       setEmail(initialEmail);
       setName('');
+      setConsent(false);
       setErrors({});
       setSubmitted(false);
       // Focus name field (or email if name already done)
@@ -34,9 +36,12 @@ export function EarlyAccessDrawer() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const next: { name?: string; email?: string } = {};
+    const next: { name?: string; email?: string; consent?: string } = {};
     if (!name.trim()) next.name = 'Please enter your name.';
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) next.email = 'Please enter a valid email address.';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim())) {
+      next.email = 'Please enter a valid email address (e.g. jane@example.com).';
+    }
+    if (!consent) next.consent = 'Please agree to the terms before continuing.';
     if (Object.keys(next).length) { setErrors(next); return; }
     setErrors({});
     setSubmitted(true);
@@ -209,6 +214,45 @@ export function EarlyAccessDrawer() {
                   error={errors.email}
                   onChange={v => { setEmail(v); setErrors(p => ({ ...p, email: undefined })); }}
                 />
+
+                {/* Consent checkbox */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  <label style={{
+                    display: 'flex', alignItems: 'flex-start', gap: 10,
+                    cursor: 'pointer', userSelect: 'none',
+                  }}>
+                    <div style={{ position: 'relative', flexShrink: 0, marginTop: 1 }}>
+                      <input
+                        type="checkbox"
+                        checked={consent}
+                        onChange={e => { setConsent(e.target.checked); setErrors(p => ({ ...p, consent: undefined })); }}
+                        style={{ position: 'absolute', opacity: 0, width: 0, height: 0 }}
+                      />
+                      <div style={{
+                        width: 18, height: 18, borderRadius: 5,
+                        border: `1.5px solid ${errors.consent ? 'hsl(18 65% 62%)' : consent ? 'hsl(18 65% 62%)' : 'hsl(30 15% 78%)'}`,
+                        background: consent ? 'hsl(18 65% 62%)' : errors.consent ? 'hsl(18 85% 98%)' : 'white',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        transitionProperty: 'background, border-color',
+                        transitionDuration: '140ms',
+                      }}>
+                        {consent && (
+                          <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                            <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        )}
+                      </div>
+                    </div>
+                    <span style={{ fontSize: 12, color: 'hsl(25 20% 42%)', lineHeight: 1.55 }}>
+                      I agree that Tello may store and use my name and email address to contact me about early access and product updates. I can unsubscribe at any time.
+                    </span>
+                  </label>
+                  {errors.consent && (
+                    <p style={{ fontSize: 12, color: 'hsl(18 65% 55%)', margin: 0, fontWeight: 500, paddingLeft: 28 }}>
+                      {errors.consent}
+                    </p>
+                  )}
+                </div>
 
                 <div style={{ marginTop: 4 }}>
                   <button
