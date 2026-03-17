@@ -79,7 +79,7 @@ export function BenefitsSection() {
   };
 
   return (
-    <section id="early-access" ref={ref} className="bg-primary py-20 sm:py-28 px-5 sm:px-6">
+    <section id="early-access" ref={ref} className="bg-primary py-14 sm:py-20 lg:py-28 px-5 sm:px-6">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-12 lg:gap-16 items-center">
 
         {/* Left: Copy + form */}
@@ -128,8 +128,8 @@ export function BenefitsSection() {
             <span className="text-primary-foreground/35 text-xs">{spotCount} of 100 spots taken</span>
           </div>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 w-full sm:max-w-sm">
+          {/* Form — desktop */}
+          <form onSubmit={handleSubmit} className="hidden sm:flex flex-row gap-3 w-full sm:max-w-sm">
             <input
               type="email"
               value={email}
@@ -141,7 +141,17 @@ export function BenefitsSection() {
               Claim Your Spot
             </Button>
           </form>
-          {error && <p className="mt-2 text-coral text-sm">{error}</p>}
+          {error && <p className="mt-2 text-coral text-sm hidden sm:block">{error}</p>}
+
+          {/* Button — mobile */}
+          <Button
+            onClick={() => openDrawer('')}
+            variant="coral"
+            size="lg"
+            className="sm:hidden w-full"
+          >
+            Claim Your Spot
+          </Button>
         </div>
 
         {/* Right: Recreated dashboard */}
@@ -152,7 +162,18 @@ export function BenefitsSection() {
               className="absolute -inset-6 rounded-3xl pointer-events-none"
               style={{ background: 'radial-gradient(ellipse at center, hsl(18 75% 65% / 0.12) 0%, transparent 70%)' }}
             />
-            <DashboardPreview animate={isVisible} />
+            {/* Mobile: clip to top portion with fade */}
+            <div className="relative lg:hidden" style={{ height: 310, overflow: 'hidden' }}>
+              <DashboardPreview animate={isVisible} />
+              <div
+                className="absolute inset-x-0 bottom-0 pointer-events-none"
+                style={{ height: 80, background: 'linear-gradient(transparent, hsl(25 45% 22%))' }}
+              />
+            </div>
+            {/* Desktop: full dashboard */}
+            <div className="hidden lg:block">
+              <DashboardPreview animate={isVisible} />
+            </div>
           </div>
         </div>
 

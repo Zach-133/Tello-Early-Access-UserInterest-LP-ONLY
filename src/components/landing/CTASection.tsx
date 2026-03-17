@@ -96,7 +96,8 @@ export function CTASection() {
             transform: isVisible ? 'translateY(0)' : 'translateY(16px)',
           }}
         >
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto mb-10">
+          {/* Desktop: email + button */}
+          <form onSubmit={handleSubmit} className="hidden sm:flex flex-row gap-3 max-w-md mx-auto mb-10">
             <input
               type="email"
               value={email}
@@ -108,7 +109,17 @@ export function CTASection() {
               Get Early Access
             </Button>
           </form>
-          {error && <p className="mb-4 text-coral text-sm">{error}</p>}
+          {error && <p className="mb-4 text-coral text-sm hidden sm:block">{error}</p>}
+
+          {/* Mobile: button only */}
+          <Button
+            onClick={() => openDrawer('')}
+            variant="coral"
+            size="lg"
+            className="sm:hidden w-full max-w-xs mx-auto mb-10 font-semibold"
+          >
+            Get Early Access
+          </Button>
         </div>
 
         {/* Benefits row */}

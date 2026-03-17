@@ -87,7 +87,7 @@ export function HowItWorksSection() {
               filter: isVisible ? 'blur(0px)' : 'blur(12px)',
             }}
           >
-            All the must-haves to excel<br className="hidden sm:block" />in your interview.
+            All the must-haves to excel{' '}<br className="hidden sm:block" />in your interview.
           </h2>
           <p
             className="text-primary-foreground/70 text-base sm:text-lg max-w-lg mx-auto leading-relaxed"
@@ -106,14 +106,14 @@ export function HowItWorksSection() {
         </div>
 
         {/* Grid — cards surge up from below */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-5">
           {features.map((f, i) => {
             const Icon = f.icon;
             const delay = 280 + i * 90;
             return (
               <div
                 key={f.title}
-                className="rounded-2xl p-6 cursor-default"
+                className="rounded-xl sm:rounded-2xl p-3 sm:p-6 cursor-default"
                 style={{
                   background: 'hsl(25 40% 26%)',
                   boxShadow: '0 2px 12px rgba(0,0,0,0.18)',
@@ -134,13 +134,13 @@ export function HowItWorksSection() {
                 }}
               >
                 <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-5"
+                  className="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center mb-2 sm:mb-5"
                   style={{ background: 'hsla(18,75%,65%,0.18)' }}
                 >
-                  <Icon className="w-5 h-5" style={{ color: 'hsl(18 75% 70%)' }} />
+                  <Icon className="w-3.5 h-3.5 sm:w-5 sm:h-5" style={{ color: 'hsl(18 75% 70%)' }} />
                 </div>
-                <h3 className="font-semibold text-primary-foreground text-base mb-2">{f.title}</h3>
-                <p className="text-primary-foreground/70 text-sm leading-relaxed">{f.desc}</p>
+                <h3 className="font-semibold text-primary-foreground text-[10px] leading-tight sm:text-base sm:mb-2">{f.title}</h3>
+                <p className="hidden sm:block text-primary-foreground/70 text-sm leading-relaxed">{f.desc}</p>
               </div>
             );
           })}

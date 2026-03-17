@@ -71,11 +71,11 @@ export function HeroSection() {
           Practice live mock interviews across 10 industries, without fear of judgement. Get instant, scored feedback. No prep course needed.
         </p>
 
-        {/* Email CTA */}
+        {/* Email CTA — desktop */}
         <div style={stagger(520)}>
           <form
             onSubmit={handleSubmit}
-            className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+            className="hidden sm:flex flex-row gap-3 max-w-md mx-auto"
           >
             <input
               id="hero-email"
@@ -89,7 +89,17 @@ export function HeroSection() {
               Claim Your Spot →
             </Button>
           </form>
-          {error && <p className="mt-2 text-coral text-sm">{error}</p>}
+          {error && <p className="mt-2 text-coral text-sm hidden sm:block">{error}</p>}
+
+          {/* Mobile CTA — opens drawer directly */}
+          <Button
+            onClick={() => openDrawer('')}
+            variant="coral"
+            size="lg"
+            className="sm:hidden w-full max-w-xs"
+          >
+            Claim Your Spot →
+          </Button>
         </div>
 
       </div>
