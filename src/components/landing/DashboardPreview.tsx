@@ -176,7 +176,8 @@ export function DashboardPreview({ animate }: { animate?: boolean }) {
   }, [animate]);
 
   const switchMode = (mode: ChartMode) => { setChartMode(mode); setAnimationDone(false); };
-  const chartData = chartMode === 'overall' ? overallData : breakdownData;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const chartData: any[] = chartMode === 'overall' ? overallData : breakdownData;
 
   return (
     <div

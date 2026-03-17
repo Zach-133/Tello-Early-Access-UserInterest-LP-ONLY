@@ -8,7 +8,6 @@ const stagger = (delayMs: number): React.CSSProperties => ({
   animation: `slide-up 0.7s cubic-bezier(0.16,1,0.3,1) ${delayMs}ms forwards`,
 });
 
-const trustItems = ['10 Job Fields', 'Live Voice AI', 'Instant Results', '1 Month Free'];
 
 export function HeroSection() {
   const [email, setEmail] = useState('');
