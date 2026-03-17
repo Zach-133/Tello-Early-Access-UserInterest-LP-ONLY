@@ -87,10 +87,10 @@ export function HowItWorksSection() {
               filter: isVisible ? 'blur(0px)' : 'blur(12px)',
             }}
           >
-            All the must-haves to excel<br />in your interview.
+            All the must-haves to excel<br className="hidden sm:block" />in your interview.
           </h2>
           <p
-            className="text-primary-foreground/70 text-lg max-w-lg mx-auto leading-relaxed"
+            className="text-primary-foreground/70 text-base sm:text-lg max-w-lg mx-auto leading-relaxed"
             style={{
               transitionProperty: 'opacity, transform, filter',
               transitionDuration: '800ms',

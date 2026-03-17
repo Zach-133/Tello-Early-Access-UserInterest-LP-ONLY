@@ -234,7 +234,7 @@ export function DashboardPreview({ animate }: { animate?: boolean }) {
 
         {/* Header */}
         <div className="mb-4">
-          <h3 style={{ fontFamily: 'DM Serif Display, Georgia, serif', fontSize: 22, fontWeight: 400, color: 'hsl(25 45% 15%)', lineHeight: 1.2, margin: 0 }}>
+          <h3 style={{ fontFamily: 'DM Serif Display, Georgia, serif', fontSize: 'clamp(16px, 4vw, 22px)', fontWeight: 400, color: 'hsl(25 45% 15%)', lineHeight: 1.2, margin: 0 }}>
             Welcome back, Zachery.
           </h3>
           <p style={{ fontSize: 13, color: 'hsl(25 15% 50%)', marginTop: 3 }}>

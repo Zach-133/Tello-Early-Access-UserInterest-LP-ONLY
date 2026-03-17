@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import confetti from 'canvas-confetti';
 import { CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
@@ -18,17 +19,34 @@ export function BenefitsSection() {
   const [spotCount, setSpotCount] = useState(0);
   const { ref, isVisible } = useScrollReveal({ threshold: 0.1 });
   const { openDrawer } = useEarlyAccess();
+  const barRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!isVisible) return;
-    const target = 83;
+    if (!isVisible) { setSpotCount(0); return; }
+    const target = 34;
     const duration = 1400;
     const stepTime = Math.floor(duration / target);
     let current = 0;
     const timer = setInterval(() => {
       current += 1;
       setSpotCount(current);
-      if (current >= target) clearInterval(timer);
+      if (current >= target) {
+        clearInterval(timer);
+        const rect = barRef.current?.getBoundingClientRect();
+        confetti({
+          particleCount: 60,
+          spread: 360,
+          startVelocity: 6,
+          gravity: 0.2,
+          decay: 0.88,
+          ticks: 120,
+          scalar: 0.65,
+          origin: rect
+            ? { x: (rect.left + rect.width * (34 / 100)) / window.innerWidth, y: (rect.top + rect.height / 2) / window.innerHeight }
+            : { x: 0.2, y: 0.6 },
+          colors: ['#E08060', '#D4A843', '#4AADA8', '#ffffff'],
+        });
+      }
     }, stepTime);
     return () => clearInterval(timer);
   }, [isVisible]);
@@ -95,10 +113,11 @@ export function BenefitsSection() {
 
           {/* Scarcity bar */}
           <div className="flex items-center gap-3 mb-7">
-            <div className="w-32 h-1 bg-white/10 rounded-full overflow-hidden">
+            <div ref={barRef} className="w-32 h-1 bg-white/10 rounded-full overflow-hidden">
               <div
-                className="h-full bg-coral rounded-full"
+                className="h-full rounded-full"
                 style={{
+                  background: '#ef4444',
                   width: `${spotCount}%`,
                   transitionProperty: 'width',
                   transitionDuration: '50ms',
@@ -110,7 +129,7 @@ export function BenefitsSection() {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-sm">
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 w-full sm:max-w-sm">
             <input
               type="email"
               value={email}

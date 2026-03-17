@@ -12,6 +12,7 @@ export function EarlyAccessDrawer() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const nameRef = useRef<HTMLInputElement>(null);
+  const submitRef = useRef<HTMLButtonElement>(null);
 
   // Sync email when drawer opens with a pre-filled value
   useEffect(() => {
@@ -53,10 +54,14 @@ export function EarlyAccessDrawer() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: name.trim(), email: email.trim() }),
     }).catch(() => {});
+    const btn = submitRef.current;
+    const rect = btn ? btn.getBoundingClientRect() : null;
     confetti({
       particleCount: 120,
-      spread: 70,
-      origin: { y: 0.6 },
+      spread: 60,
+      origin: rect
+        ? { x: (rect.left + rect.width / 2) / window.innerWidth, y: (rect.top + rect.height / 2) / window.innerHeight }
+        : { x: 0.5, y: 0.75 },
       colors: ['#E08060', '#D4A843', '#4AADA8', '#ffffff'],
     });
     setSubmitted(true);
@@ -128,7 +133,7 @@ export function EarlyAccessDrawer() {
           <X size={15} style={{ color: 'hsl(25 25% 40%)' }} />
         </button>
 
-        <div style={{ padding: '52px 36px 40px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <div style={{ padding: '52px clamp(18px, 5vw, 36px) 40px', flex: 1, display: 'flex', flexDirection: 'column' }}>
 
           {submitted ? (
             /* ── Success state ── */
@@ -155,7 +160,10 @@ export function EarlyAccessDrawer() {
                   You're on the list{name ? `, ${name.split(' ')[0]}` : ''}.
                 </p>
                 <p style={{ fontSize: 14, color: 'hsl(25 15% 50%)', lineHeight: 1.6 }}>
-                  We'll email you at <strong style={{ color: 'hsl(25 35% 25%)', fontWeight: 600 }}>{email}</strong> when early access opens in April.
+                  We'll reach you at <strong style={{ color: 'hsl(25 35% 25%)', fontWeight: 600 }}>{email}</strong> when early access opens in April 2026.
+                </p>
+                <p style={{ fontSize: 12, color: 'hsl(25 15% 62%)', lineHeight: 1.55, marginTop: 10 }}>
+                  Can't find our email? Check your junk or spam folder.
                 </p>
               </div>
               <button
@@ -207,7 +215,7 @@ export function EarlyAccessDrawer() {
                   Claim your early<br />access spot.
                 </h2>
                 <p style={{ fontSize: 14, color: 'hsl(25 15% 50%)', lineHeight: 1.6 }}>
-                  Priority entry + 1 month free PRO when we launch in April.
+                  Priority entry + 1 month free PRO when we officially launch in April 2026.
                 </p>
               </div>
 
@@ -260,7 +268,7 @@ export function EarlyAccessDrawer() {
                       </div>
                     </div>
                     <span style={{ fontSize: 12, color: 'hsl(25 20% 42%)', lineHeight: 1.55 }}>
-                      I agree that Tello may store and use my name and email address to contact me about early access and product updates. I can unsubscribe at any time.
+                      I agree to be contacted by Tello about early access and product updates. Unsubscribe any time.
                     </span>
                   </label>
                   {errors.consent && (
@@ -272,6 +280,7 @@ export function EarlyAccessDrawer() {
 
                 <div style={{ marginTop: 4 }}>
                   <button
+                    ref={submitRef}
                     type="submit"
                     style={{
                       width: '100%', padding: '13px 0', borderRadius: 10,

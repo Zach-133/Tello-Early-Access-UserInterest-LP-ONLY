@@ -65,7 +65,7 @@ export function HeroSection() {
 
         {/* Subtitle */}
         <p
-          className="text-primary-foreground/70 text-lg leading-relaxed mb-10 max-w-xl mx-auto"
+          className="text-primary-foreground/70 text-base sm:text-lg leading-relaxed mb-10 max-w-xl mx-auto"
           style={stagger(340)}
         >
           Practice live mock interviews across 10 industries, without fear of judgement. Get instant, scored feedback. No prep course needed.
