@@ -9,6 +9,9 @@ export function EarlyAccessDrawer() {
   const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState<{ name?: string; email?: string; consent?: string }>({});
   const [submitted, setSubmitted] = useState(false);
+  const [alreadySignedUp, setAlreadySignedUp] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
   const nameRef = useRef<HTMLInputElement>(null);
 
   // Sync email when drawer opens with a pre-filled value
@@ -19,6 +22,9 @@ export function EarlyAccessDrawer() {
       setConsent(false);
       setErrors({});
       setSubmitted(false);
+      setAlreadySignedUp(false);
+      setSubmitError('');
+      setSubmitting(false);
       // Focus name field (or email if name already done)
       setTimeout(() => nameRef.current?.focus(), 320);
     }
@@ -34,7 +40,7 @@ export function EarlyAccessDrawer() {
     return () => { document.body.style.overflow = ''; };
   }, [isOpen]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const next: { name?: string; email?: string; consent?: string } = {};
     if (!name.trim()) next.name = 'Please enter your name.';
@@ -44,7 +50,25 @@ export function EarlyAccessDrawer() {
     if (!consent) next.consent = 'Please agree to the terms before continuing.';
     if (Object.keys(next).length) { setErrors(next); return; }
     setErrors({});
-    setSubmitted(true);
+    setSubmitError('');
+    setSubmitting(true);
+    try {
+      const res = await fetch(import.meta.env.VITE_N8N_WEBHOOK_URL as string, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name.trim(), email: email.trim() }),
+      });
+      const data = await res.json();
+      if (data.status === 'duplicate') {
+        setAlreadySignedUp(true);
+      } else {
+        setSubmitted(true);
+      }
+    } catch {
+      setSubmitError('Something went wrong — please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -114,7 +138,53 @@ export function EarlyAccessDrawer() {
 
         <div style={{ padding: '52px 36px 40px', flex: 1, display: 'flex', flexDirection: 'column' }}>
 
-          {submitted ? (
+          {alreadySignedUp ? (
+            /* ── Already signed up state ── */
+            <div style={{
+              display: 'flex', flexDirection: 'column', alignItems: 'center',
+              justifyContent: 'center', flex: 1, textAlign: 'center', gap: 20,
+              paddingTop: 40,
+            }}>
+              <div style={{
+                width: 64, height: 64, borderRadius: '50%',
+                background: 'hsl(42 85% 92%)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                animation: 'eaDrawerPop 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              }}>
+                <CheckCircle size={30} style={{ color: '#D4A843' }} />
+              </div>
+              <div>
+                <p style={{
+                  fontFamily: 'DM Serif Display, Georgia, serif',
+                  fontSize: 26, fontWeight: 400,
+                  color: 'hsl(25 45% 15%)', lineHeight: 1.25,
+                  marginBottom: 10,
+                }}>
+                  You're already on the list.
+                </p>
+                <p style={{ fontSize: 14, color: 'hsl(25 15% 50%)', lineHeight: 1.6 }}>
+                  We already have <strong style={{ color: 'hsl(25 35% 25%)', fontWeight: 600 }}>{email}</strong> registered. We'll be in touch on April 1st.
+                </p>
+              </div>
+              <button
+                onClick={closeDrawer}
+                style={{
+                  marginTop: 8,
+                  padding: '10px 28px', borderRadius: 8,
+                  border: '1px solid hsl(30 15% 85%)',
+                  background: 'white', fontSize: 13,
+                  color: 'hsl(25 25% 40%)', fontWeight: 500,
+                  cursor: 'pointer',
+                  transitionProperty: 'background',
+                  transitionDuration: '150ms',
+                }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'hsl(30 20% 94%)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'white'; }}
+              >
+                Close
+              </button>
+            </div>
+          ) : submitted ? (
             /* ── Success state ── */
             <div style={{
               display: 'flex', flexDirection: 'column', alignItems: 'center',
@@ -278,9 +348,15 @@ export function EarlyAccessDrawer() {
                     }}
                     onMouseDown={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(0.985)'; }}
                     onMouseUp={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1)'; }}
+                    disabled={submitting}
                   >
-                    Join the Early Access List
+                    {submitting ? 'Submitting…' : 'Join the Early Access List'}
                   </button>
+                  {submitError && (
+                    <p style={{ marginTop: 8, fontSize: 12, color: 'hsl(18 65% 55%)', fontWeight: 500, textAlign: 'center' }}>
+                      {submitError}
+                    </p>
+                  )}
                   <p style={{ marginTop: 12, textAlign: 'center', fontSize: 12, color: 'hsl(25 15% 58%)' }}>
                     No credit card. No commitment.
                   </p>
