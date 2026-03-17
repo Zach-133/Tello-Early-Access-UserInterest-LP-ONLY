@@ -366,8 +366,8 @@ export function DashboardPreview({ animate }: { animate?: boolean }) {
             </div>
           </div>
 
-          {/* New Mock Interview */}
-          <div className="rounded-xl p-3.5 flex flex-col" style={{ background: 'white', border: '1.5px solid hsl(18 60% 83%)', gap: 10 }}>
+          {/* New Mock Interview — hidden on mobile */}
+          <div className="hidden sm:flex flex-col rounded-xl p-3.5" style={{ background: 'white', border: '1.5px solid hsl(18 60% 83%)', gap: 10 }}>
             <div>
               <p style={{ fontSize: 13, fontWeight: 600, color: 'hsl(25 35% 20%)', margin: 0 }}>New Mock Interview</p>
               <p style={{ fontSize: 11, color: 'hsl(25 15% 55%)', marginTop: 3 }}>Configure and start your next session</p>

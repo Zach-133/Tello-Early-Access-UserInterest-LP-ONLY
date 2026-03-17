@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useEarlyAccess } from '@/context/EarlyAccessContext';
-import telloLogo from '/tello_logo_white.png';
 
 const NAV_LINKS = [
   { label: 'Features', id: 'features', block: 'start' as ScrollLogicalPosition },
@@ -38,7 +37,24 @@ export function Navbar() {
     <>
       <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-border/40 shadow-soft">
         <div className="container mx-auto flex items-center justify-between h-16 px-6 max-w-6xl">
-          <img src={telloLogo} alt="Tello" className="h-10 w-auto rounded-md cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} />
+          {/* Inline SVG logo — crisp at any resolution */}
+          <div
+            className="flex items-center gap-2 cursor-pointer shrink-0"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          >
+            <div
+              className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+              style={{ background: 'linear-gradient(135deg, hsl(18 75% 65%), hsl(18 65% 55%))' }}
+            >
+              <span className="font-serif text-white font-bold text-base leading-none">T</span>
+            </div>
+            <span
+              className="leading-none"
+              style={{ fontFamily: 'Georgia, serif', fontWeight: 400, fontSize: '1.25rem', color: 'hsl(25 30% 12%)' }}
+            >
+              Tello
+            </span>
+          </div>
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-7">

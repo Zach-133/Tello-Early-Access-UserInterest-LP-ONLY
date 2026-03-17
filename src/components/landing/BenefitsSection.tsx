@@ -153,7 +153,7 @@ export function BenefitsSection() {
               style={{ background: 'radial-gradient(ellipse at center, hsl(18 75% 65% / 0.12) 0%, transparent 70%)' }}
             />
             {/* Mobile: scale down to show full dashboard */}
-            <div className="lg:hidden overflow-hidden" style={{ height: 440 }}>
+            <div className="lg:hidden overflow-hidden" style={{ height: 340 }}>
               <div style={{ transform: 'scale(0.65)', transformOrigin: 'top left', width: '154%' }}>
                 <DashboardPreview animate={isVisible} />
               </div>
