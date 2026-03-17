@@ -106,6 +106,7 @@ export function DashboardPreview({ animate }: { animate?: boolean }) {
   const [tapIndicator, setTapIndicator] = useState<ChartMode | null>(null);
   const outerRef        = useRef<HTMLDivElement>(null);
   const breakdownBtnRef = useRef<HTMLButtonElement>(null);
+  const userToggledRef  = useRef(false);
 
   // ── Compute cursor keyframe translation from button positions ──────────────
   useEffect(() => {
@@ -161,12 +162,12 @@ export function DashboardPreview({ animate }: { animate?: boolean }) {
     const TAP_CLEAR  = 800;
 
     const runCycle = () => {
-      const t0  = setTimeout(() => setTapIndicator('breakdown'), CLICK_AT - TAP_BEFORE);
-      const t0c = setTimeout(() => setTapIndicator(null),        CLICK_AT - TAP_BEFORE + TAP_CLEAR);
-      const t1  = setTimeout(() => { setChartMode('breakdown'); setAnimationDone(false); }, CLICK_AT);
-      const t2a = setTimeout(() => setTapIndicator('overall'),   RESET_AT - TAP_BEFORE);
-      const t2c = setTimeout(() => setTapIndicator(null),        RESET_AT - TAP_BEFORE + TAP_CLEAR);
-      const t2  = setTimeout(() => { setChartMode('overall');   setAnimationDone(false); }, RESET_AT);
+      const t0  = setTimeout(() => { if (!userToggledRef.current) setTapIndicator('breakdown'); }, CLICK_AT - TAP_BEFORE);
+      const t0c = setTimeout(() => setTapIndicator(null),                                          CLICK_AT - TAP_BEFORE + TAP_CLEAR);
+      const t1  = setTimeout(() => { if (!userToggledRef.current) { setChartMode('breakdown'); setAnimationDone(false); } }, CLICK_AT);
+      const t2a = setTimeout(() => { if (!userToggledRef.current) setTapIndicator('overall'); },  RESET_AT - TAP_BEFORE);
+      const t2c = setTimeout(() => setTapIndicator(null),                                          RESET_AT - TAP_BEFORE + TAP_CLEAR);
+      const t2  = setTimeout(() => { if (!userToggledRef.current) { setChartMode('overall');   setAnimationDone(false); } }, RESET_AT);
       return [t0, t0c, t1, t2a, t2c, t2] as ReturnType<typeof setTimeout>[];
     };
 
@@ -183,7 +184,7 @@ export function DashboardPreview({ animate }: { animate?: boolean }) {
     };
   }, [animate]);
 
-  const switchMode = (mode: ChartMode) => { setChartMode(mode); setAnimationDone(false); setTapIndicator(null); };
+  const switchMode = (mode: ChartMode) => { setChartMode(mode); setAnimationDone(false); setTapIndicator(null); userToggledRef.current = true; };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const chartData: any[] = chartMode === 'overall' ? overallData : breakdownData;
 
